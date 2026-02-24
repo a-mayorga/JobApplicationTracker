@@ -79,6 +79,7 @@ const columns: {
 ];
 
 export function JobTable() {
+	const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -275,6 +276,11 @@ export function JobTable() {
 	return (
 		<>
 			<div className="space-y-6">
+				{isDemo && (
+					<div className="text-xs text-muted-foreground mb-2">
+						Demo mode – Read only
+					</div>
+				)}
 				<div className="flex flex-col md:flex-row gap-4 justify-between">
 					<div className="flex flex-col md:flex-row md:items-center gap-4">
 						<div className="relative max-w-sm">
@@ -301,7 +307,7 @@ export function JobTable() {
 						</div>
 					</div>
 					<div className="flex items-center gap-4">
-						<Button onClick={() => setJobDialogOpen(true)}>Add Job</Button>
+						{!isDemo && <Button onClick={() => setJobDialogOpen(true)}>Add Job</Button>}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button variant="outline">
@@ -412,6 +418,7 @@ export function JobTable() {
 										key={job.id}
 										className="hover:bg-muted/50 transition-colors cursor-pointer select-none overflow-hidden text-ellipsis whitespace-nowrap"
 										onDoubleClick={() => {
+											if (isDemo) return;
 											setEditingJob(job);
 											setJobDialogOpen(true);
 										}}>

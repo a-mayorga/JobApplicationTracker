@@ -15,7 +15,15 @@ export async function GET(req: NextRequest) {
 		return new Response('Invalid pagination params', { status: 400 });
 	}
 
-	const allowedSortFields = ['company', 'position', 'positionType', 'location', 'dateApplied', 'createdAt', 'status'];
+	const allowedSortFields = [
+		'company',
+		'position',
+		'positionType',
+		'location',
+		'dateApplied',
+		'createdAt',
+		'status'
+	];
 
 	const finalSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
 
@@ -59,6 +67,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: Request) {
+	if (process.env.DEMO_MODE === 'true') {
+		return new Response('Read-only demo', { status: 403 });
+	}
+
 	const body = await req.json();
 
 	const { company, position, positionType, location, link } = body;
