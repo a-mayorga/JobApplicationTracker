@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
 
 	const page = Number(searchParams.get('page') ?? 1);
 	const limit = Number(searchParams.get('limit') ?? 10);
-	const search = searchParams.get('search') ?? '';
+	const search = searchParams.get('search')?.trim() ?? '';
 
 	const sortBy = searchParams.get('sortBy') ?? 'createdAt';
 	const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc';
@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
 	const where = search
 		? {
 				OR: [
-					{ company: { contains: search } },
-					{ position: { contains: search } }
+					{ company: { contains: search, mode: 'insensitive' } },
+					{ position: { contains: search, mode: 'insensitive' } }
 				]
 			}
 		: {};

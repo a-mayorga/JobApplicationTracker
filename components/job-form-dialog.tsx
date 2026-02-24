@@ -4,8 +4,7 @@ import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
-	DialogTitle,
-	DialogTrigger
+	DialogTitle
 } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,12 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger
+} from '@/components/ui/popover';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { jobSchema, JobFormValues } from '@/lib/validators/job';
@@ -26,6 +31,9 @@ import { useCreateJob } from '@/hooks/useCreateJob';
 import { useEffect, useState } from 'react';
 import { useUpdateJob } from '@/hooks/useUpdateJob';
 import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
 
 type JobFormDialogProps = {
 	mode?: 'create' | 'edit';
@@ -41,6 +49,7 @@ export function JobFormDialog({
 	onOpenChange
 }: JobFormDialogProps) {
 	const [internalOpen, setInternalOpen] = useState(false);
+	const [openDatePicker, setOpenDatePicker] = useState(false);
 	const open = controlledOpen ?? internalOpen;
 	const setOpen = onOpenChange ?? setInternalOpen;
 	const { isPending } = useCreateJob();
@@ -62,6 +71,7 @@ export function JobFormDialog({
 			position: initialData?.position ?? '',
 			positionType: initialData?.positionType ?? 'Full Time',
 			location: initialData?.location ?? '',
+			dateApplied: initialData?.dateApplied ? new Date(initialData.dateApplied) : undefined,
 			link: initialData?.link ?? '',
 			status: initialData?.status ?? 'Applied'
 		}
@@ -95,21 +105,24 @@ export function JobFormDialog({
 	}, [open, reset]);
 
 	useEffect(() => {
-		if (initialData) {
+		if (mode === 'edit' && initialData) {
+			reset(initialData);
+		} else if (mode === 'create') {
 			reset({
-				company: initialData.company ?? '',
-				position: initialData.position ?? '',
-				positionType: initialData.positionType ?? 'Full Time',
-				location: initialData.location ?? '',
-				link: initialData.link ?? '',
-				status: initialData.status ?? 'Applied'
+				company: '',
+				position: '',
+				positionType: 'Full Time',
+				location: '',
+				dateApplied: new Date(),
+				link: '',
+				status: 'Applied'
 			});
 		}
-	}, [initialData, reset]);
+	}, [initialData, mode, reset]);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+			<DialogContent onOpenAutoFocus={e => e.preventDefault()}>
 				<DialogHeader>
 					<DialogTitle>
 						{mode === 'edit'
@@ -168,7 +181,26 @@ export function JobFormDialog({
 							)}
 						/>
 					</div>
-
+					<Popover open={openDatePicker} onOpenChange={setOpenDatePicker}>
+						<PopoverTrigger asChild>
+							<Button
+								variant="outline"
+								className="data-[empty=true]:text-muted-foreground w-full justify-start text-left font-normal">
+								<CalendarIcon />
+								{watch('dateApplied') ? format(watch('dateApplied'), 'dd/LL/yyyy') : <span>Date Applied</span>}
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className="w-auto p-0">
+							<Calendar
+								mode="single"
+								selected={watch('dateApplied')}
+								onSelect={(selectedDate: any) => {
+									setValue('dateApplied', selectedDate);
+									setOpenDatePicker(false);
+								}}
+							/>
+						</PopoverContent>
+					</Popover>
 					<div>
 						<Input
 							placeholder="Link"

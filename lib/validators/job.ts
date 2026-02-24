@@ -5,6 +5,7 @@ export const jobSchema = z.object({
 	position: z.string().min(2, 'Position is required'),
 	positionType: z.enum(['Full Time', 'Part Time', 'Contractor', 'Unknown']),
 	location: z.string().min(2, 'Location is required'),
+	dateApplied: z.date(),
 	link: z.preprocess(
 		val => {
 			if (!val) return '';
