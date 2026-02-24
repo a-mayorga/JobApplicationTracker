@@ -96,7 +96,7 @@ export function JobTable() {
 	const page = Number(searchParams.get('page') ?? 1);
 	const limit = Number(searchParams.get('limit') ?? 10);
 	const search = searchParams.get('search') ?? '';
-	const sortBy = searchParams.get('sortBy') ?? 'dateApplied';
+	const sortBy = searchParams.get('sortBy') ?? 'createdAt';
 	const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc';
 	const [searchInput, setSearchInput] = useState(search);
 	const [editingJob, setEditingJob] = useState<any>(null);
@@ -186,7 +186,7 @@ export function JobTable() {
 		}
 
 		updateParams({
-			sortBy: 'dateApplied',
+			sortBy: 'createdAt',
 			order: 'desc',
 			page: '1'
 		});
