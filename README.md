@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Application Tracker
 
-## Getting Started
+A production-ready full-stack job tracking system built with Next.js, Prisma and PostgreSQL.
 
-First, run the development server:
+Includes a protected production deployment and a public read-only demo environment.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Live Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Demo (Read-only): https://job-application-tracker-demo-amayorga.vercel.app
+- Production (Private): Access protected
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Next.js (App Router)
+- React
+- Prisma ORM
+- PostgreSQL (Neon)
+- TanStack Query
+- Shadcn/UI
+- TailwindCSS
+- Vercel (Deployment)
 
-## Learn More
+## Key Features
 
-To learn more about Next.js, take a look at the following resources:
+- Server-side offset pagination
+- Column sorting with URL state synchronization
+- Case-insensitive search using PostgreSQL
+- Persisted column visibility preferences
+- Optimized data fetching with caching (TanStack Query)
+- Read-only demo mode via environment-based configuration
+- Protected production deployment using middleware authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application is deployed in two environments:
 
-## Deploy on Vercel
+### Production
+- Protected via middleware authentication
+- Connected to a dedicated PostgreSQL database
+- Full read/write access
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Demo
+- Public read-only deployment
+- Separate PostgreSQL database with seeded mock data
+- Write operations disabled via environment flag
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Both environments use the same codebase and are configured through environment variables.
+
+## Technical Decisions
+
+- Offset-based pagination was chosen to keep the implementation predictable and scalable.
+- Search is implemented at the database level using case-insensitive filters.
+- Environment-based configuration allows safe separation between production and demo deployments.
+- Prisma was selected for type-safe database interaction.
