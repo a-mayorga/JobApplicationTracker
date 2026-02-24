@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
 	const body = await req.json();
 
-	const { company, position, positionType, location, link } = body;
+	const { company, position, positionType, location, dateApplied, link } = body;
 
 	if (!company || !position) {
 		return new Response('Missing required fields', { status: 400 });
@@ -85,6 +85,7 @@ export async function POST(req: Request) {
 			position,
 			positionType: positionType ?? 'Unknown',
 			location: location ?? 'Unknown',
+			dateApplied: dateApplied ? new Date(dateApplied) : new Date(),
 			link: link ?? ''
 		}
 	});

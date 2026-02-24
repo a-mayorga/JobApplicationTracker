@@ -33,7 +33,7 @@ import { useUpdateJob } from '@/hooks/useUpdateJob';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/formatDate';
 
 type JobFormDialogProps = {
 	mode?: 'create' | 'edit';
@@ -71,7 +71,9 @@ export function JobFormDialog({
 			position: initialData?.position ?? '',
 			positionType: initialData?.positionType ?? 'Full Time',
 			location: initialData?.location ?? '',
-			dateApplied: initialData?.dateApplied ? new Date(initialData.dateApplied) : undefined,
+			dateApplied: initialData?.dateApplied
+				? new Date(initialData.dateApplied)
+				: undefined,
 			link: initialData?.link ?? '',
 			status: initialData?.status ?? 'Applied'
 		}
@@ -106,7 +108,12 @@ export function JobFormDialog({
 
 	useEffect(() => {
 		if (mode === 'edit' && initialData) {
-			reset(initialData);
+			reset({
+				...initialData,
+				dateApplied: initialData.dateApplied
+					? new Date(initialData.dateApplied)
+					: undefined
+			});
 		} else if (mode === 'create') {
 			reset({
 				company: '',
@@ -187,15 +194,24 @@ export function JobFormDialog({
 								variant="outline"
 								className="data-[empty=true]:text-muted-foreground w-full justify-start text-left font-normal">
 								<CalendarIcon />
-								{watch('dateApplied') ? format(watch('dateApplied'), 'dd/LL/yyyy') : <span>Date Applied</span>}
+								{watch('dateApplied') ? (
+									formatDate(watch('dateApplied'))
+								) : (
+									<span>Date Applied</span>
+								)}
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="w-auto p-0">
 							<Calendar
 								mode="single"
 								selected={watch('dateApplied')}
-								onSelect={(selectedDate: any) => {
-									setValue('dateApplied', selectedDate);
+								onSelect={selectedDate => {
+									if (!selectedDate) return;
+
+									setValue('dateApplied', selectedDate, {
+										shouldValidate: true
+									});
+
 									setOpenDatePicker(false);
 								}}
 							/>

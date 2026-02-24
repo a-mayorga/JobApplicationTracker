@@ -33,7 +33,6 @@ export function useUpdateJob() {
     },
 
     onSuccess: () => {
-      // 🔑 importante: invalidar TODAS las variantes
       queryClient.invalidateQueries({
         queryKey: ["jobs"],
         exact: false,
