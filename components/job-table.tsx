@@ -11,7 +11,6 @@ import {
 	ArrowDown,
 	Link2,
 	SearchX,
-	Download,
 	X,
 	Settings2,
 	ChevronRight,
