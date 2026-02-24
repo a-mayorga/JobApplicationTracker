@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  // Si es demo no proteger
   if (process.env.DEMO_MODE === "true") {
     return NextResponse.next();
   }
@@ -19,7 +18,7 @@ export function proxy(request: NextRequest) {
   }
 
   const base64Credentials = authHeader.split(" ")[1];
-  const credentials = atob(base64Credentials);
+  const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
   const [, password] = credentials.split(":");
 
   if (password !== process.env.APP_PASSWORD) {
