@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
 	const where = search
 		? {
 				OR: [
-					{ company: { contains: search, mode: 'insensitive' } },
-					{ position: { contains: search, mode: 'insensitive' } }
+					{ company: { contains: search, mode: 'insensitive' as const } },
+					{ position: { contains: search, mode: 'insensitive' as const } }
 				]
 			}
 		: {};
